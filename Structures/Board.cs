@@ -23,6 +23,7 @@ namespace Undead_040220.Structures
             Height = height;
             CellSize = cellSize;
 
+            // create list of cells
             for (int j = 0; j < Height; j++) {
                 for (int i = 0; i < Width; i++) {
                     Cells.Add(new Cell(i, j));
@@ -42,5 +43,8 @@ namespace Undead_040220.Structures
 
         public void SetOrigin(Point centerPoint) 
             => _origin = new Vector2(centerPoint.X - ((Width * CellSize) / 2), centerPoint.Y - ((Height * CellSize) / 2));
+
+        public Cell CellAtCoordinate(int x, int y)
+            => Cells.Where(e => e.Coordinate.X == x && e.Coordinate.Y == y).FirstOrDefault();
     }
 }

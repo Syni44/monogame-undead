@@ -35,6 +35,7 @@ namespace Undead_040220
         int boardHeight = 5;
         int cellBorderThickness = 3;
 
+        bool initGameDrawn = false;
         System.Random rng = new System.Random();
 
         public Undead() {
@@ -114,8 +115,6 @@ namespace Undead_040220
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.Black);
-
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate,
                 BlendState.AlphaBlend,
@@ -125,26 +124,23 @@ namespace Undead_040220
                 null
             );
 
-            //                  texture        pos      crop     tint     rot                texture origin point                    scale     spr effect    layer
-            // spriteBatch.Draw(zombie_s, Vector2.Zero, null, Color.White, 0f, new Vector2(zombie_s.Width / 2, zombie_s.Height / 2), scale, SpriteEffects.None, 1);
-
-            // TODO: call once when cells aren't yet drawn
-            gameBoard.Draw(spriteBatch, white_s, scale, cellBorderThickness);
 
 
+            if (!initGameDrawn) {
+                GraphicsDevice.Clear(Color.Black);
 
-            //var firstCell = gameBoard.Cells.Where(e => e.Coordinate.X == 0 && e.Coordinate.Y == 0).FirstOrDefault();
-            //firstCell.DrawCellSprite(spriteBatch, zombie_s);
+                gameBoard.Draw(spriteBatch, white_s, scale, cellBorderThickness);
 
-            //var otherCell = gameBoard.Cells.Where(e => e.Coordinate.X == 2 && e.Coordinate.Y == 1).FirstOrDefault();
-            //otherCell.DrawCellSprite(spriteBatch, ghost_s);
+                var spriteList = new List<Texture2D>() { zombie_s, vampire_s, ghost_s, mirrorL_s, mirrorR_s };
 
-            var spriteList = new List<Texture2D>() { zombie_s, vampire_s, ghost_s, mirrorL_s, mirrorR_s };
+                for (int i = 0; i < gameBoard.Cells.Count; i++) {
+                    Cell c = gameBoard.CellAtCoordinate(i % gameBoard.Width, i / gameBoard.Width);
+                    c.DrawCellSprite(spriteBatch, spriteList[rng.Next(spriteList.Count())]);
+                }
 
-            for (int i = 0; i < gameBoard.Cells.Count; i++) {
-                var c = gameBoard.Cells.Where(e => e.Coordinate.X == i % gameBoard.Width && e.Coordinate.Y == i / gameBoard.Width).FirstOrDefault();
-                c.DrawCellSprite(spriteBatch, spriteList[rng.Next(spriteList.Count())] );
+                initGameDrawn = true;
             }
+
 
 
             spriteBatch.End();

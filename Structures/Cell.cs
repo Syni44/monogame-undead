@@ -17,7 +17,9 @@ namespace Undead_040220.Structures
 
         // Draws a Cell to a position depending on it's coordinate within the game board.
         public void Draw(SpriteBatch sb, Texture2D t, Vector2 pos, int cellSize, Vector2 scale, int border) {
-            Position = new Vector2(pos.X + (Coordinate.X * cellSize), pos.Y + (Coordinate.Y * cellSize));
+            // TODO: ensure newer Position assignment is just as effective as this old one
+            // Position = new Vector2(pos.X + (Coordinate.X * cellSize), pos.Y + (Coordinate.Y * cellSize));
+            Position = pos + (Coordinate * cellSize);
             CellSize = cellSize;
             BorderThickness = border;
 
