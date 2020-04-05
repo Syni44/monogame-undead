@@ -15,6 +15,7 @@ namespace Undead_040220.Structures
         public int Height { get; private set; }
         public int CellSize { get; private set; }
         public List<Cell> Cells { get; private set; } = new List<Cell>();
+        public List<Indicator> Indicators { get; private set; } = new List<Indicator>();
 
         private Vector2 _origin = new Vector2();
 
@@ -22,13 +23,6 @@ namespace Undead_040220.Structures
             Width = width;
             Height = height;
             CellSize = cellSize;
-
-            // create list of cells
-            for (int j = 0; j < Height; j++) {
-                for (int i = 0; i < Width; i++) {
-                    Cells.Add(new Cell(i, j));
-                }
-            }
         }
 
         /// <summary>
@@ -39,6 +33,22 @@ namespace Undead_040220.Structures
             foreach (Cell c in Cells) {
                 c.Draw(sb, t, _origin + c.Coordinate, CellSize, scale, cellBorder);
             }
+        }
+
+        /// <summary>
+        /// Fills the gameboard with empty Cells.
+        /// </summary>
+        public void CreateCells() {
+            for (int j = 0; j < Height; j++) {
+                for (int i = 0; i < Width; i++) {
+                    Cells.Add(new Cell(i, j));
+                }
+            }
+        }
+
+        public void CreateIndicators() {
+            // TODO: implement logic that creates indicator points on either side of every row and column
+            // Keep indicator points fairly close to the border of the grid (cellSize / 2?) and use SpriteFont
         }
 
         public void SetOrigin(Point centerPoint) 

@@ -9,7 +9,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Undead_040220.Structures
 {
-    class Mirror
+    internal class Mirror : Cell
     {
+        public Mirror(int coordX, int coordY) : base(coordX, coordY) {
+
+        }
     }
 }

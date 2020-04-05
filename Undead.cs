@@ -26,7 +26,7 @@ namespace Undead_040220
         Texture2D mirrorL_s;
         Texture2D mirrorR_s;
 
-        int texSize = 64;
+        int cellSize = 128;
         Vector2 scale;
 
         // game board fields
@@ -58,8 +58,12 @@ namespace Undead_040220
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            // TODO: Add your initialization logic here
-            gameBoard = new Board(boardWidth, boardHeight, cellSize:128);
+            // spawn a new game board here and populate with cells and indicators
+            gameBoard = new Board(boardWidth, boardHeight, cellSize);
+            gameBoard.CreateCells();
+            gameBoard.CreateIndicators();
+
+            // define center point when drawing game board to the screen
             gameBoard.SetOrigin(new Point(resWidth / 2, resHeight / 2));
 
             base.Initialize();
@@ -74,7 +78,6 @@ namespace Undead_040220
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             white_s = Content.Load<Texture2D>("white_1x1");
             zombie_s = Content.Load<Texture2D>("zombie");
             vampire_s = Content.Load<Texture2D>("vampire");
@@ -82,10 +85,10 @@ namespace Undead_040220
             mirrorL_s = Content.Load<Texture2D>("mirror_l");
             mirrorR_s = Content.Load<Texture2D>("mirror_r");
 
-            // determined by the size initialized in texSize and the width of any sprite, since they should
-            // all be the same size
-            scale = new Vector2(texSize / (float)zombie_s.Width, texSize / (float)zombie_s.Height);
-
+            // determined by defining 64 as the default texture size and dividing it by the width and height
+            // of the texture2ds
+            // TODO: consider making the texture size a variable and using that to determine cellSize or vice versa
+            scale = new Vector2(64 / (float)zombie_s.Width, 64 / (float)zombie_s.Height);
         }
 
         /// <summary>
@@ -115,7 +118,6 @@ namespace Undead_040220
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Immediate,
                 BlendState.AlphaBlend,
                 SamplerState.PointClamp,

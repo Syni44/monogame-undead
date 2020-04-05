@@ -6,13 +6,15 @@ namespace Undead_040220.Structures
 {
     class Cell
     {
+        // relative to grid, ie {0, 2}
         public Vector2 Coordinate { get; private set; }
+        // pixel position within game window, ie {440, 80}
         public Vector2 Position { get; private set; }
         public int CellSize { get; private set; }
         public int BorderThickness { get; set; }
 
-        public Cell(int x, int y, int cellSize = 64) {
-            Coordinate = new Vector2(x, y);
+        public Cell(int coordX, int coordY) {
+            Coordinate = new Vector2(coordX, coordY);
         }
 
         // Draws a Cell to a position depending on it's coordinate within the game board.
