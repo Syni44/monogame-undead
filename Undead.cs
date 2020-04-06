@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Undead_040220.Structures;
@@ -26,14 +27,16 @@ namespace Undead_040220
         Texture2D mirrorL_s;
         Texture2D mirrorR_s;
 
-        int cellSize = 128;
-        Vector2 scale;
+        SpriteFont indicator_font;
+
+        int cellSize = 96;
+        Vector2 scale = new Vector2(4, 4);
 
         // game board fields
         Board gameBoard;
         int boardWidth = 6;
         int boardHeight = 5;
-        int cellBorderThickness = 3;
+        int cellBorderThickness = 2;
 
         bool initGameDrawn = false;
         System.Random rng = new System.Random();
@@ -60,7 +63,7 @@ namespace Undead_040220
         protected override void Initialize() {
             // spawn a new game board here and populate with cells and indicators
             gameBoard = new Board(boardWidth, boardHeight, cellSize);
-            gameBoard.CreateCells();
+            gameBoard.CreateCells(cellSize, cellBorderThickness);
             gameBoard.CreateIndicators();
 
             // define center point when drawing game board to the screen
@@ -85,10 +88,7 @@ namespace Undead_040220
             mirrorL_s = Content.Load<Texture2D>("mirror_l");
             mirrorR_s = Content.Load<Texture2D>("mirror_r");
 
-            // determined by defining 64 as the default texture size and dividing it by the width and height
-            // of the texture2ds
-            // TODO: consider making the texture size a variable and using that to determine cellSize or vice versa
-            scale = new Vector2(64 / (float)zombie_s.Width, 64 / (float)zombie_s.Height);
+            indicator_font = Content.Load<SpriteFont>("indicator_font");
         }
 
         /// <summary>
@@ -131,13 +131,24 @@ namespace Undead_040220
             if (!initGameDrawn) {
                 GraphicsDevice.Clear(Color.Black);
 
-                gameBoard.Draw(spriteBatch, white_s, scale, cellBorderThickness);
+                gameBoard.Draw(spriteBatch, white_s, scale);
 
+                // TODO: right now this just draws random sprites to every tile upon launch
                 var spriteList = new List<Texture2D>() { zombie_s, vampire_s, ghost_s, mirrorL_s, mirrorR_s };
 
                 for (int i = 0; i < gameBoard.Cells.Count; i++) {
                     Cell c = gameBoard.CellAtCoordinate(i % gameBoard.Width, i / gameBoard.Width);
                     c.DrawCellSprite(spriteBatch, spriteList[rng.Next(spriteList.Count())]);
+                }
+
+
+                for (int i = 0; i < gameBoard.Indicators.Count; i++) {
+                    // TODO: get indicator via some method. "coordinate" possibly not ideal due to indicators only
+                    // appearing twice per row/column at specific places
+
+                    //Indicator n = gameBoard.IndicatorAt((Indicator.Side)Math.Ceiling((double)i / 4), i % gameBoard.Width);
+                    //n.DrawIndicatorText(spriteBatch, indicator_font, gameBoard.Cells);
+
                 }
 
                 initGameDrawn = true;

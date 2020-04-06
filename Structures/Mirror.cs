@@ -11,7 +11,8 @@ namespace Undead_040220.Structures
 {
     internal class Mirror : Cell
     {
-        public Mirror(int coordX, int coordY) : base(coordX, coordY) {
+        public Mirror(int coordX, int coordY, int cellSize, int borderThickness)
+            : base(coordX, coordY, cellSize, borderThickness) {
 
         }
     }

@@ -11,7 +11,8 @@ namespace Undead_040220.Structures
 {
     internal class Monster : Cell
     {
-        public Monster(int coordX, int coordY) : base(coordX, coordY) {
+        public Monster(int coordX, int coordY, int cellSize, int borderThickness)
+            : base(coordX, coordY, cellSize, borderThickness) {
 
         }
     }

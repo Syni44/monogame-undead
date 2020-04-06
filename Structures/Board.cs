@@ -29,26 +29,40 @@ namespace Undead_040220.Structures
         /// For drawing any elements on screen that are related to the game's playing grid.
         /// </summary>
         /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb, Texture2D t, Vector2 scale, int cellBorder) {
+        public void Draw(SpriteBatch sb, Texture2D t, Vector2 scale) {
+            // draws a white square for each cell
             foreach (Cell c in Cells) {
-                c.Draw(sb, t, _origin + c.Coordinate, CellSize, scale, cellBorder);
+                c.Draw(sb, t, _origin + c.Coordinate, scale);
             }
         }
 
         /// <summary>
         /// Fills the gameboard with empty Cells.
         /// </summary>
-        public void CreateCells() {
+        public void CreateCells(int cellSize, int borderThickness) {
             for (int j = 0; j < Height; j++) {
                 for (int i = 0; i < Width; i++) {
-                    Cells.Add(new Cell(i, j));
+                    Cells.Add(new Cell(i, j, cellSize, borderThickness));
                 }
             }
         }
 
+        /// <summary>
+        /// Surrounds the game board with indicator points, used to count monsters along reflected path.
+        /// </summary>
         public void CreateIndicators() {
             // TODO: implement logic that creates indicator points on either side of every row and column
             // Keep indicator points fairly close to the border of the grid (cellSize / 2?) and use SpriteFont
+
+            for (int i = 0; i < Width; i++) {
+                Indicators.Add(new Indicator(Indicator.Side.Top, i));
+                Indicators.Add(new Indicator(Indicator.Side.Bottom, i));
+            }
+
+            for (int j = 0; j < Height; j++) {
+                Indicators.Add(new Indicator(Indicator.Side.Left, j));
+                Indicators.Add(new Indicator(Indicator.Side.Right, j));
+            }
         }
 
         public void SetOrigin(Point centerPoint) 
@@ -56,5 +70,8 @@ namespace Undead_040220.Structures
 
         public Cell CellAtCoordinate(int x, int y)
             => Cells.Where(e => e.Coordinate.X == x && e.Coordinate.Y == y).FirstOrDefault();
+
+        public Indicator IndicatorAt(Indicator.Side s, int index)
+            => Indicators.Where(e => e.SideOfBoard == s && e.Index == index).FirstOrDefault();
     }
 }
