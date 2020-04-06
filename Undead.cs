@@ -34,8 +34,8 @@ namespace Undead_040220
 
         // game board fields
         Board gameBoard;
-        int boardWidth = 6;
-        int boardHeight = 5;
+        int boardWidth = 4;
+        int boardHeight = 4;
         int cellBorderThickness = 2;
 
         bool initGameDrawn = false;
@@ -131,7 +131,7 @@ namespace Undead_040220
             if (!initGameDrawn) {
                 GraphicsDevice.Clear(Color.Black);
 
-                gameBoard.Draw(spriteBatch, white_s, scale);
+                gameBoard.Draw(spriteBatch, white_s, indicator_font, scale);
 
                 // TODO: right now this just draws random sprites to every tile upon launch
                 var spriteList = new List<Texture2D>() { zombie_s, vampire_s, ghost_s, mirrorL_s, mirrorR_s };

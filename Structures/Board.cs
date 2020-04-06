@@ -29,10 +29,15 @@ namespace Undead_040220.Structures
         /// For drawing any elements on screen that are related to the game's playing grid.
         /// </summary>
         /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb, Texture2D t, Vector2 scale) {
+        public void Draw(SpriteBatch sb, Texture2D t, SpriteFont font, Vector2 scale) {
             // draws a white square for each cell
             foreach (Cell c in Cells) {
                 c.Draw(sb, t, _origin + c.Coordinate, scale);
+            }
+
+            // TODO: draws text "hi" at every indicator point
+            foreach (Indicator n in Indicators) {
+                n.Draw(sb, font, this, CellSize);
             }
         }
 
