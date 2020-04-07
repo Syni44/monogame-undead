@@ -63,11 +63,12 @@ namespace Undead_040220
         protected override void Initialize() {
             // spawn a new game board here and populate with cells and indicators
             gameBoard = new Board(boardWidth, boardHeight, cellSize);
-            gameBoard.CreateCells(cellSize, cellBorderThickness);
-            gameBoard.CreateIndicators();
 
             // define center point when drawing game board to the screen
             gameBoard.SetOrigin(new Point(resWidth / 2, resHeight / 2));
+
+            gameBoard.CreateCells(cellSize, cellBorderThickness);
+            gameBoard.CreateIndicators();
 
             base.Initialize();
 

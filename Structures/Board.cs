@@ -32,7 +32,7 @@ namespace Undead_040220.Structures
         public void Draw(SpriteBatch sb, Texture2D t, SpriteFont font, Vector2 scale) {
             // draws a white square for each cell
             foreach (Cell c in Cells) {
-                c.Draw(sb, t, _origin + c.Coordinate, scale);
+                c.Draw(sb, t, scale);
             }
 
             // TODO: draws text "hi" at every indicator point
@@ -47,7 +47,9 @@ namespace Undead_040220.Structures
         public void CreateCells(int cellSize, int borderThickness) {
             for (int j = 0; j < Height; j++) {
                 for (int i = 0; i < Width; i++) {
-                    Cells.Add(new Cell(i, j, cellSize, borderThickness));
+                    Cell c = new Cell(i, j, cellSize, borderThickness);
+                    c.SetPosition(_origin);
+                    Cells.Add(c);
                 }
             }
         }
@@ -60,13 +62,13 @@ namespace Undead_040220.Structures
             // Keep indicator points fairly close to the border of the grid (cellSize / 2?) and use SpriteFont
 
             for (int i = 0; i < Width; i++) {
-                Indicators.Add(new Indicator(Indicator.Side.Top, i));
-                Indicators.Add(new Indicator(Indicator.Side.Bottom, i));
+                Indicators.Add(new Indicator(Indicator.Side.Top, i, this, CellSize));
+                Indicators.Add(new Indicator(Indicator.Side.Bottom, i, this, CellSize));
             }
 
             for (int j = 0; j < Height; j++) {
-                Indicators.Add(new Indicator(Indicator.Side.Left, j));
-                Indicators.Add(new Indicator(Indicator.Side.Right, j));
+                Indicators.Add(new Indicator(Indicator.Side.Left, j, this, CellSize));
+                Indicators.Add(new Indicator(Indicator.Side.Right, j, this, CellSize));
             }
         }
 

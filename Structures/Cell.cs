@@ -19,12 +19,12 @@ namespace Undead_040220.Structures
             BorderThickness = borderThickness;
         }
 
-        // Draws a Cell to a position depending on it's coordinate within the game board.
-        internal void Draw(SpriteBatch sb, Texture2D t, Vector2 pos, Vector2 scale) {
-            // TODO: ensure newer Position assignment is just as effective as this old one
-            //Position = new Vector2(pos.X + (Coordinate.X * CellSize), pos.Y + (Coordinate.Y * CellSize));
-            Position = pos + (Coordinate * CellSize);
+        internal void SetPosition(Vector2 boardOriginPoint) {
+            Position = boardOriginPoint + Coordinate + (Coordinate * CellSize);
+        }
 
+        // Draws a Cell to a position depending on it's coordinate within the game board.
+        internal void Draw(SpriteBatch sb, Texture2D t, Vector2 scale) {
             sb.Draw(texture: t,
                 position: Position,
                 sourceRectangle: null,
