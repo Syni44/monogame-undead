@@ -9,11 +9,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Undead_040220.Structures
 {
-    internal class Monster : Cell
+    internal class Monster
     {
-        public Monster(int coordX, int coordY, int cellSize, int borderThickness)
-            : base(coordX, coordY, cellSize, borderThickness) {
 
-        }
     }
 }

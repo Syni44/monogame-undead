@@ -9,11 +9,20 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Undead_040220.Structures
 {
-    internal class Mirror : Cell
+    internal class Mirror
     {
-        public Mirror(int coordX, int coordY, int cellSize, int borderThickness)
-            : base(coordX, coordY, cellSize, borderThickness) {
+        public enum Direction
+        {
+            Left,
+            Right
+        }
 
+        public Direction DirectionOfMirror { get; private set; }
+        public Vector2 Coordinate { get; private set; } = new Vector2();
+
+        public Mirror(Direction d, Vector2 coordinate) {
+            DirectionOfMirror = d;
+            Coordinate = coordinate;
         }
     }
 }

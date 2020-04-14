@@ -16,29 +16,16 @@ namespace Undead_040220.Structures
         public int CellSize { get; private set; }
         public List<Cell> Cells { get; private set; } = new List<Cell>();
         public List<Indicator> Indicators { get; private set; } = new List<Indicator>();
+        public List<Mirror> Mirrors { get; private set; } = new List<Mirror>();
+        public List<Monster> Monsters { get; private set; } = new List<Monster>();
 
         private Vector2 _origin = new Vector2();
+        private Random rng = new Random();
 
         public Board(int width = 4, int height = 4, int cellSize = 64) {
             Width = width;
             Height = height;
             CellSize = cellSize;
-        }
-
-        /// <summary>
-        /// For drawing any elements on screen that are related to the game's playing grid.
-        /// </summary>
-        /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb, Texture2D t, SpriteFont font, Vector2 scale) {
-            // draws a white square for each cell
-            foreach (Cell c in Cells) {
-                c.Draw(sb, t, scale);
-            }
-
-            // TODO: draws text "hi" at every indicator point
-            foreach (Indicator n in Indicators) {
-                n.Draw(sb, font, this, CellSize);
-            }
         }
 
         /// <summary>
@@ -72,10 +59,56 @@ namespace Undead_040220.Structures
             }
         }
 
+        /// <summary>
+        /// Determines the locations to spawn mirrors.
+        /// </summary>
+        public void CreateMirrors() {
+            do {
+                Mirrors.Clear();
+
+                for (int i = 0; i < Cells.Count; i++) {
+                    int direction = rng.Next(2);
+
+                    switch (rng.Next(3)) {
+                        case 0: break;
+                        case 1: break;
+                        default:
+                            Mirrors.Add(new Mirror((Mirror.Direction)direction, new Vector2(i % Width, i / Width)));
+                            break;
+                    }
+                }
+            } while (Mirrors.Count <= (Width * Height / 4) || Mirrors.Count > (Width * Height / 1.8));
+        }
+
+        /// <summary>
+        /// For drawing any elements on screen that are related to the game's playing grid.
+        /// </summary>
+        /// <param name="sb"></param>
+        public void Draw(SpriteBatch sb, Texture2D t, SpriteFont font, Vector2 scale) {
+            // draws a white square for each cell
+            foreach (Cell c in Cells) {
+                c.Draw(sb, t, scale);
+            }
+
+            // TODO: draws text "hi" at every indicator point
+            foreach (Indicator n in Indicators) {
+                n.Draw(sb, font, this, CellSize);
+            }
+        }
+
+        public void DrawMirrors(SpriteBatch sb, Texture2D mL_t, Texture2D mR_t) {
+            foreach (Mirror m in Mirrors) {
+                // use rng to determine the angle of the mirror; which texture to use
+                Texture2D chosenDirectionTexture = (m.DirectionOfMirror == 0) ? mL_t : mR_t;
+
+                CellAtCoordinate(m.Coordinate.X, m.Coordinate.Y).DrawCellSprite(sb, chosenDirectionTexture);
+            }
+        }
+
         public void SetOrigin(Point centerPoint) 
             => _origin = new Vector2(centerPoint.X - ((Width * CellSize) / 2), centerPoint.Y - ((Height * CellSize) / 2));
 
-        public Cell CellAtCoordinate(int x, int y)
+        public Cell CellAtCoordinate(float x, float y)
             => Cells.Where(e => e.Coordinate.X == x && e.Coordinate.Y == y).FirstOrDefault();
 
         public Indicator IndicatorAt(Indicator.Side s, int index)

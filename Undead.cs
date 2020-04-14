@@ -69,6 +69,7 @@ namespace Undead_040220
 
             gameBoard.CreateCells(cellSize, cellBorderThickness);
             gameBoard.CreateIndicators();
+            gameBoard.CreateMirrors();
 
             base.Initialize();
 
@@ -134,23 +135,25 @@ namespace Undead_040220
 
                 gameBoard.Draw(spriteBatch, white_s, indicator_font, scale);
 
-                // TODO: right now this just draws random sprites to every tile upon launch
-                var spriteList = new List<Texture2D>() { zombie_s, vampire_s, ghost_s, mirrorL_s, mirrorR_s };
+                //// TODO: right now this just draws random sprites to every tile upon launch
+                //var spriteList = new List<Texture2D>() { zombie_s, vampire_s, ghost_s, mirrorL_s, mirrorR_s };
 
-                for (int i = 0; i < gameBoard.Cells.Count; i++) {
-                    Cell c = gameBoard.CellAtCoordinate(i % gameBoard.Width, i / gameBoard.Width);
-                    c.DrawCellSprite(spriteBatch, spriteList[rng.Next(spriteList.Count())]);
-                }
+                //for (int i = 0; i < gameBoard.Cells.Count; i++) {
+                //    Cell c = gameBoard.CellAtCoordinate(i % gameBoard.Width, i / gameBoard.Width);
+                //    c.DrawCellSprite(spriteBatch, spriteList[rng.Next(spriteList.Count())]);
+                //}
 
 
-                for (int i = 0; i < gameBoard.Indicators.Count; i++) {
-                    // TODO: get indicator via some method. "coordinate" possibly not ideal due to indicators only
-                    // appearing twice per row/column at specific places
+                //for (int i = 0; i < gameBoard.Indicators.Count; i++) {
+                //    // TODO: get indicator via some method. "coordinate" possibly not ideal due to indicators only
+                //    // appearing twice per row/column at specific places
 
-                    //Indicator n = gameBoard.IndicatorAt((Indicator.Side)Math.Ceiling((double)i / 4), i % gameBoard.Width);
-                    //n.DrawIndicatorText(spriteBatch, indicator_font, gameBoard.Cells);
+                //    //Indicator n = gameBoard.IndicatorAt((Indicator.Side)Math.Ceiling((double)i / 4), i % gameBoard.Width);
+                //    //n.DrawIndicatorText(spriteBatch, indicator_font, gameBoard.Cells);
 
-                }
+                //}
+
+                gameBoard.DrawMirrors(spriteBatch, mirrorL_s, mirrorR_s);
 
                 initGameDrawn = true;
             }
