@@ -46,6 +46,9 @@
     <Compile Include="Structures\Indicator.cs" />
     <Compile Include="Structures\Mirror.cs" />
     <Compile Include="Structures\Monster.cs" />
+    <Compile Include="Structures\Monsters\Ghost.cs" />
+    <Compile Include="Structures\Monsters\Vampire.cs" />
+    <Compile Include="Structures\Monsters\Zombie.cs" />
     <Compile Include="Undead.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

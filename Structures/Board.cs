@@ -20,7 +20,7 @@ namespace Undead_040220.Structures
         public List<Monster> Monsters { get; private set; } = new List<Monster>();
 
         private Vector2 _origin = new Vector2();
-        private Random rng = new Random();
+        private Random _rng = new Random();
 
         public Board(int width = 4, int height = 4, int cellSize = 64) {
             Width = width;
@@ -67,9 +67,9 @@ namespace Undead_040220.Structures
                 Mirrors.Clear();
 
                 for (int i = 0; i < Cells.Count; i++) {
-                    int direction = rng.Next(2);
+                    int direction = _rng.Next(2);
 
-                    switch (rng.Next(3)) {
+                    switch (_rng.Next(3)) {
                         case 0: break;
                         case 1: break;
                         default:
