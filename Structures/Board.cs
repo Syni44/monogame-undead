@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -18,6 +19,7 @@ namespace Undead_040220.Structures
         public List<Indicator> Indicators { get; private set; } = new List<Indicator>();
         public List<Mirror> Mirrors { get; private set; } = new List<Mirror>();
         public List<Monster> Monsters { get; private set; } = new List<Monster>();
+        public List<Route> Routes { get; private set; } = new List<Route>();
 
         private Vector2 _origin = new Vector2();
         private Random _rng = new Random();
@@ -69,15 +71,94 @@ namespace Undead_040220.Structures
                 for (int i = 0; i < Cells.Count; i++) {
                     int direction = _rng.Next(2);
 
+                    // mirror frequency rate. _rng.Next(3) would mean 33.3% chance
+                    // new cases should be added to reflect chances
                     switch (_rng.Next(3)) {
                         case 0: break;
                         case 1: break;
                         default:
+                            // todo: attach mirror to Cell in cell data.
+                            Cells[i].HasMirror = true;
                             Mirrors.Add(new Mirror((Mirror.Direction)direction, new Vector2(i % Width, i / Width)));
                             break;
                     }
                 }
             } while (Mirrors.Count <= (Width * Height / 4) || Mirrors.Count > (Width * Height / 1.8));
+        }
+
+        /// <summary>
+        /// Uses placement of mirrors to determine the start and endpoints for sightlines.
+        /// </summary>
+        public void DetermineRoutes() {
+            for (int i = 0; i < Indicators.Count; i++) {
+                if (!Routes.Any(e => e.PointA == Indicators[i] || e.PointB == Indicators[i])) {
+                    // indicator n = point A
+                    Indicator n1 = Indicators[i];
+                    Indicator n2;
+
+                    // get indicator n2: indicator n's coordinates (side of board, index), iterate along the axis determined by
+                    // side of board, evaluating each cell until a mirror cell is reached. use mirror type (left vs right) to determine
+                    // new route vector. when any coordinate exceeds board size, indicator n2's coordinates as last fetched
+
+                    // iterating from SideOfBoard: if n1.SideOfBoard is even, we iterate along the x axis, if it's odd, y axis
+                    // var yetUnknown = n1.SideOfBoard;
+
+                    Vector2 routeDirection;
+                    if (n1.SideOfBoard == Indicator.Side.Left) {
+                        // moving right
+                        routeDirection = new Vector2(1, 0);
+                    }
+                    else if (n1.SideOfBoard == Indicator.Side.Top) {
+                        // moving down
+                        routeDirection = new Vector2(0, 1);
+                    }
+                    else if (n1.SideOfBoard == Indicator.Side.Right) {
+                        // moving left
+                        routeDirection = new Vector2(-1, 0);
+                    }
+                    else if (n1.SideOfBoard == Indicator.Side.Bottom) {
+                        // moving up
+                        routeDirection = new Vector2(0, -1);
+                    }
+                    else {
+                        throw new Exception("something went wrong with route directions");
+                    }
+
+                    Vector2 currentCellCoordinate = n1.AttachedCell.Coordinate;
+
+                    // iterate from starting point cell in the route direction by one. First, check if the new cell exists.
+                    // if it's outside the bounds of the array / can't get cell at coordinate, we've reached the second
+                    // indicator point. If not, check if the cell has a mirror, and reflect by changing route direction.
+
+                    while (true) {
+                        currentCellCoordinate += routeDirection;
+
+                        if (currentCellCoordinate.X >= Width || currentCellCoordinate.X < 0
+                            || currentCellCoordinate.Y >= Height || currentCellCoordinate.Y < 0) {
+                            currentCellCoordinate -= routeDirection;
+
+                            // TODO: get the indicator from Indicators list that corresponds to the right index on the right side
+                            // n2 = CellAtCoordinate(currentCellCoordinate.X, currentCellCoordinate.Y).
+
+                            break;
+                        }
+                        else {
+                            if (CellAtCoordinate(currentCellCoordinate.X, currentCellCoordinate.Y).HasMirror) {
+                                if (Mirrors.Where(e => e.Coordinate == currentCellCoordinate).FirstOrDefault().DirectionOfMirror == Mirror.Direction.Left) {
+                                    // if mirror faces left
+                                    routeDirection = new Vector2(routeDirection.Y, routeDirection.X);
+                                }
+                                else {
+                                    // if mirror faces right
+                                    routeDirection = new Vector2(-routeDirection.Y, -routeDirection.X);
+                                }
+                            }
+                        }
+                    }
+
+                    // Route r = new Route(n1, n2);
+                }
+            }
         }
 
         /// <summary>
@@ -101,7 +182,8 @@ namespace Undead_040220.Structures
                 // use rng to determine the angle of the mirror; which texture to use
                 Texture2D chosenDirectionTexture = (m.DirectionOfMirror == 0) ? mL_t : mR_t;
 
-                CellAtCoordinate(m.Coordinate.X, m.Coordinate.Y).DrawCellSprite(sb, chosenDirectionTexture);
+                CellAtCoordinate(m.Coordinate.X, m.Coordinate.Y)
+                    .DrawCellSprite(sb, chosenDirectionTexture);
             }
         }
 

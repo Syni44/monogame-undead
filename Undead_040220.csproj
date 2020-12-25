@@ -49,6 +49,7 @@
     <Compile Include="Structures\Monsters\Ghost.cs" />
     <Compile Include="Structures\Monsters\Vampire.cs" />
     <Compile Include="Structures\Monsters\Zombie.cs" />
+    <Compile Include="Structures\Route.cs" />
     <Compile Include="Undead.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

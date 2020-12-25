@@ -12,6 +12,8 @@ namespace Undead_040220.Structures
         public Vector2 Position { get; private set; }
         public int CellSize { get; private set; }
         public int BorderThickness { get; private set; }
+        public bool HasMirror { get; set; } = false;
+        public bool HasMonster { get; set; } = false;
 
         public Cell(int coordX, int coordY, int cellSize, int borderThickness) {
             Coordinate = new Vector2(coordX, coordY);

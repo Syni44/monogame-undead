@@ -34,8 +34,8 @@ namespace Undead_040220
 
         // game board fields
         Board gameBoard;
-        int boardWidth = 4;
-        int boardHeight = 4;
+        int boardWidth = 6;
+        int boardHeight = 5;
         int cellBorderThickness = 2;
 
         bool initGameDrawn = false;
@@ -70,6 +70,7 @@ namespace Undead_040220
             gameBoard.CreateCells(cellSize, cellBorderThickness);
             gameBoard.CreateIndicators();
             gameBoard.CreateMirrors();
+            gameBoard.DetermineRoutes();
 
             base.Initialize();
 
