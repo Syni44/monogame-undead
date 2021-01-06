@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -77,7 +78,8 @@ namespace Undead_040220.Structures
                         case 0: break;
                         case 1: break;
                         default:
-                            // todo: attach mirror to Cell in cell data.
+                            // todo: the mirror adding stuff here occasionally breaks
+                            // cells can sometimes be marked as HasMirror despite no mirror having the same coordinates
                             Cells[i].HasMirror = true;
                             Mirrors.Add(new Mirror((Mirror.Direction)direction, new Vector2(i % Width, i / Width)));
                             break;
@@ -99,9 +101,6 @@ namespace Undead_040220.Structures
                     // get indicator n2: indicator n's coordinates (side of board, index), iterate along the axis determined by
                     // side of board, evaluating each cell until a mirror cell is reached. use mirror type (left vs right) to determine
                     // new route vector. when any coordinate exceeds board size, indicator n2's coordinates as last fetched
-
-                    // iterating from SideOfBoard: if n1.SideOfBoard is even, we iterate along the x axis, if it's odd, y axis
-                    // var yetUnknown = n1.SideOfBoard;
 
                     Vector2 routeDirection;
                     if (n1.SideOfBoard == Indicator.Side.Left) {
@@ -131,32 +130,66 @@ namespace Undead_040220.Structures
                     // indicator point. If not, check if the cell has a mirror, and reflect by changing route direction.
 
                     while (true) {
-                        currentCellCoordinate += routeDirection;
-
+                        // check if route is out of bounds
                         if (currentCellCoordinate.X >= Width || currentCellCoordinate.X < 0
                             || currentCellCoordinate.Y >= Height || currentCellCoordinate.Y < 0) {
                             currentCellCoordinate -= routeDirection;
 
-                            // TODO: get the indicator from Indicators list that corresponds to the right index on the right side
-                            // n2 = CellAtCoordinate(currentCellCoordinate.X, currentCellCoordinate.Y).
+                            // get the indicator from Indicators list that corresponds to the right index on the right side.
+                            // the above if statement's four conditions might be relevant to know which "side" of the gameboard Indicator n2
+                            // is on. Mod operator might come in handy too. too sleepy rn
+
+                            // TODO: possible refactoring
+
+                            Indicator.Side side;
+
+                            if (routeDirection == new Vector2(1, 0)) {
+                                side = Indicator.Side.Right;
+                            }
+                            else if (routeDirection == new Vector2(0, 1)) {
+                                side = Indicator.Side.Bottom;
+                            }
+                            else if (routeDirection == new Vector2(-1, 0)) {
+                                side = Indicator.Side.Left;
+                            }
+                            else if (routeDirection == new Vector2(0, -1)) {
+                                side = Indicator.Side.Top;
+                            }
+                            else {
+                                Debug.WriteLine($"ERROR finding endpoint indicator side!");
+                                side = Indicator.Side.Left;
+                            }
+
+                            var listOfPossibleEndPoints = Indicators.Where(e => e.AttachedCell.Coordinate == currentCellCoordinate);
+                            n2 = listOfPossibleEndPoints.Where(e => e.SideOfBoard == side).FirstOrDefault();
 
                             break;
                         }
                         else {
+                            // check if route reaches a mirror
                             if (CellAtCoordinate(currentCellCoordinate.X, currentCellCoordinate.Y).HasMirror) {
                                 if (Mirrors.Where(e => e.Coordinate == currentCellCoordinate).FirstOrDefault().DirectionOfMirror == Mirror.Direction.Left) {
-                                    // if mirror faces left
+                                    // mirror faces left
                                     routeDirection = new Vector2(routeDirection.Y, routeDirection.X);
                                 }
                                 else {
-                                    // if mirror faces right
+                                    // mirror faces right
                                     routeDirection = new Vector2(-routeDirection.Y, -routeDirection.X);
                                 }
                             }
                         }
+
+                        // march route
+                        currentCellCoordinate += routeDirection;
                     }
 
-                    // Route r = new Route(n1, n2);
+                    Route r = new Route(n1, n2);
+                    Debug.WriteLine($"New route created from {n1.SideOfBoard} - {n1.Index} to {n2.SideOfBoard} - {n2.Index}");
+
+                    // TODO: from analysing the debug messages it would seem the routes are *ignoring* a
+                    // mirror that appears in the very first cell. need to address that!
+
+                    Routes.Add(r);
                 }
             }
         }

@@ -33,6 +33,7 @@ namespace Undead_040220.Structures
             // stores the adjacent cell and sets position on screen for the indicator
             // TODO: the math in this function are really just hardcoded to look centered with certain gameBoard cellSize (96) and
             // spritefont size (16) settings; they don't actually calculate center of row/column!
+
             switch (SideOfBoard) {
                 case Side.Left:
                     AttachedCell = board.Cells.Where(e => e.Coordinate.X == 0 && e.Coordinate.Y == Index).FirstOrDefault();
