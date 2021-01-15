@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Undead_040220.Structures.Monsters;
 
 namespace Undead_040220.Structures
 {
@@ -48,7 +49,7 @@ namespace Undead_040220.Structures
         /// Surrounds the game board with indicator points, used to count monsters along reflected path.
         /// </summary>
         public void CreateIndicators() {
-            // TODO: implement logic that creates indicator points on either side of every row and column
+            // implement logic that creates indicator points on either side of every row and column
             // Keep indicator points fairly close to the border of the grid (cellSize / 2?) and use SpriteFont
 
             for (int i = 0; i < Width; i++) {
@@ -97,6 +98,7 @@ namespace Undead_040220.Structures
                     // indicator n = point A
                     Indicator n1 = Indicators[i];
                     Indicator n2;
+                    List<Cell> cellsOnRoute = new List<Cell>();
 
                     // get indicator n2: indicator n's coordinates (side of board, index), iterate along the axis determined by
                     // side of board, evaluating each cell until a mirror cell is reached. use mirror type (left vs right) to determine
@@ -180,17 +182,40 @@ namespace Undead_040220.Structures
                         }
 
                         // march route
+                        cellsOnRoute.Add(CellAtCoordinate(currentCellCoordinate.X, currentCellCoordinate.Y));
                         currentCellCoordinate += routeDirection;
                     }
 
-                    Route r = new Route(n1, n2);
-                    Debug.WriteLine($"New route created from {n1.SideOfBoard} - {n1.Index} to {n2.SideOfBoard} - {n2.Index}");
-
-                    // TODO: from analysing the debug messages it would seem the routes are *ignoring* a
-                    // mirror that appears in the very first cell. need to address that!
+                    Route r = new Route(n1, n2, cellsOnRoute);
+                    Debug.WriteLine($"New route created from {n1.SideOfBoard} - {n1.Index} to {n2.SideOfBoard} - {n2.Index}, monsters seen {r.CellsOnRouteAToB.Count(e => e.HasMonster)} times");
 
                     Routes.Add(r);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Scatters the three monster types, Ghosts, Vampires and Zombies into the empty cells of the game board.
+        /// </summary>
+        public void SpawnMonsters() {
+            foreach (Cell c in Cells.Where(e => !e.HasMirror)) {
+                switch (_rng.Next(3)) {
+                    case 0:
+                        Monsters.Add(new Zombie(new Vector2(c.Coordinate.X, c.Coordinate.Y)));
+                        Debug.WriteLine("Zombie spawned!");
+                        break;
+                    case 1:
+                        Monsters.Add(new Vampire(new Vector2(c.Coordinate.X, c.Coordinate.Y)));
+                        Debug.WriteLine("Vampire spawned!");
+                        break;
+                    default:
+                        Monsters.Add(new Ghost(new Vector2(c.Coordinate.X, c.Coordinate.Y)));
+                        Debug.WriteLine("Ghost spawned!");
+                        break;
+                }
+
+                c.MonsterInCell = Monsters.LastOrDefault();
+                c.HasMonster = true;
             }
         }
 
@@ -204,7 +229,8 @@ namespace Undead_040220.Structures
                 c.Draw(sb, t, scale);
             }
 
-            // TODO: draws text "hi" at every indicator point
+            // TODO: draws text "hi" at every indicator point, should count monsters
+            // should also refactor into DrawCells / DrawIndicators
             foreach (Indicator n in Indicators) {
                 n.Draw(sb, font, this, CellSize);
             }
@@ -212,11 +238,31 @@ namespace Undead_040220.Structures
 
         public void DrawMirrors(SpriteBatch sb, Texture2D mL_t, Texture2D mR_t) {
             foreach (Mirror m in Mirrors) {
-                // use rng to determine the angle of the mirror; which texture to use
                 Texture2D chosenDirectionTexture = (m.DirectionOfMirror == 0) ? mL_t : mR_t;
 
                 CellAtCoordinate(m.Coordinate.X, m.Coordinate.Y)
                     .DrawCellSprite(sb, chosenDirectionTexture);
+            }
+        }
+
+        public void DrawMonsters(SpriteBatch sb, Texture2D z_t, Texture2D v_t, Texture2D g_t) {
+            foreach (Monster m in Monsters) {
+
+                Texture2D chosenTexture;
+                switch (m.GetType().Name) {
+                    case "Zombie":
+                        chosenTexture = z_t;
+                        break;
+                    case "Vampire":
+                        chosenTexture = v_t;
+                        break;
+                    default:
+                        chosenTexture = g_t;
+                        break;
+                }
+
+                CellAtCoordinate(m.Coordinate.X, m.Coordinate.Y)
+                    .DrawCellSprite(sb, chosenTexture);
             }
         }
 

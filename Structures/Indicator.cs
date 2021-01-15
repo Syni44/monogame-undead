@@ -67,10 +67,10 @@ namespace Undead_040220.Structures
         internal void DrawIndicatorText(SpriteBatch sb, SpriteFont font, List<Cell> cells) {
             // TODO: draw indicator position logic
 
-            //Vector2 pos = new Vector2();
-            //pos = cells.Where(e => e.Coordinate.X == 0 && e.Coordinate.Y == Index).Select(e => e.Position).FirstOrDefault() - Vector2.One;
+            Vector2 pos = new Vector2();
+            pos = cells.Where(e => e.Coordinate.X == 0 && e.Coordinate.Y == Index).Select(e => e.Position).FirstOrDefault() - Vector2.One;
 
-            //sb.DrawString(font, "hi", pos, Color.White);
+            sb.DrawString(font, "yo", pos, Color.White);
         }
     }
 }

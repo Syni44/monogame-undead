@@ -16,11 +16,12 @@ namespace Undead_040220.Structures
     {
         public Indicator PointA { get; private set; }
         public Indicator PointB { get; private set; }
-        public List<Monster> MonstersOnRoute { get; private set; } = new List<Monster>();
+        public List<Cell> CellsOnRouteAToB { get; private set; } = new List<Cell>();
 
-        public Route(Indicator i1, Indicator i2) {
+        public Route(Indicator i1, Indicator i2, List<Cell> cells) {
             PointA = i1;
             PointB = i2;
+            CellsOnRouteAToB = cells;
         }
     }
 }

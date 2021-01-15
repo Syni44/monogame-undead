@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Undead_040220.Structures;
 
@@ -34,7 +35,7 @@ namespace Undead_040220
 
         // game board fields
         Board gameBoard;
-        int boardWidth = 6;
+        int boardWidth = 7;
         int boardHeight = 5;
         int cellBorderThickness = 2;
 
@@ -70,10 +71,10 @@ namespace Undead_040220
             gameBoard.CreateCells(cellSize, cellBorderThickness);
             gameBoard.CreateIndicators();
             gameBoard.CreateMirrors();
+            gameBoard.SpawnMonsters();
             gameBoard.DetermineRoutes();
 
             base.Initialize();
-
         }
 
         /// <summary>
@@ -145,16 +146,19 @@ namespace Undead_040220
                 //}
 
 
-                //for (int i = 0; i < gameBoard.Indicators.Count; i++) {
-                //    // TODO: get indicator via some method. "coordinate" possibly not ideal due to indicators only
-                //    // appearing twice per row/column at specific places
+                for (int i = 0; i < gameBoard.Indicators.Count; i++) {
+                    //// TODO: get indicator via some method. "coordinate" possibly not ideal due to indicators only
+                    //// appearing twice per row/column at specific places
 
-                //    //Indicator n = gameBoard.IndicatorAt((Indicator.Side)Math.Ceiling((double)i / 4), i % gameBoard.Width);
-                //    //n.DrawIndicatorText(spriteBatch, indicator_font, gameBoard.Cells);
+                    //Indicator n = gameBoard.IndicatorAt((Indicator.Side)Math.Ceiling((double)i / 4), i % gameBoard.Width);
+                    //n.DrawIndicatorText(spriteBatch, indicator_font, gameBoard.Cells);
 
-                //}
+                }
 
                 gameBoard.DrawMirrors(spriteBatch, mirrorL_s, mirrorR_s);
+
+                // vvv this is DEBUG -- we shouldn't show the monster sprites, that's the point of the game!
+                gameBoard.DrawMonsters(spriteBatch, zombie_s, vampire_s, ghost_s);
 
                 initGameDrawn = true;
             }
