@@ -17,6 +17,6 @@ namespace Undead_040220.Structures.Monsters
             Coordinate = coordinate;
         }
 
-        internal override bool IsSeen(Indicator originIndicator) => true;   // Zombies are always seen from indicator
+        internal override bool IsSeen(Indicator originIndicator, Route route) => true;   // Zombies are always seen from indicator
     }
 }

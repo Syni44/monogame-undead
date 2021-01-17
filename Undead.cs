@@ -35,7 +35,7 @@ namespace Undead_040220
 
         // game board fields
         Board gameBoard;
-        int boardWidth = 7;
+        int boardWidth = 5;
         int boardHeight = 5;
         int cellBorderThickness = 2;
 

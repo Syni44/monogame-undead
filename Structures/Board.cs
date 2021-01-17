@@ -229,10 +229,53 @@ namespace Undead_040220.Structures
                 c.Draw(sb, t, scale);
             }
 
-            // TODO: draws text "hi" at every indicator point, should count monsters
-            // should also refactor into DrawCells / DrawIndicators
-            foreach (Indicator n in Indicators) {
-                n.Draw(sb, font, this, CellSize);
+            // write # of monsters seen from each indicator point
+            // iterate through routes, flip direction of route when starting from point B
+
+            foreach (Route r in Routes) {
+                Debug.WriteLine($"NEW ROUTE -- {r.PointA.SideOfBoard}{r.PointA.Index} to {r.PointB.SideOfBoard}{r.PointB.Index}");
+                Debug.WriteLine("");
+
+                Debug.WriteLine("Point A");
+                int pointASeens = 0;
+                for (int i = 0; i < r.CellsOnRouteAToB.Count; i++) {
+                    if (r.CellsOnRouteAToB[i].HasMonster && r.CellsOnRouteAToB[i].MonsterInCell.IsSeen(r.PointA, r)) {
+                        pointASeens++;
+                        Debug.WriteLine($"Monster seen at {i} cell! It's a {r.CellsOnRouteAToB[i].MonsterInCell.GetType().Name}. Total seen from A: {pointASeens}");
+                    }
+                    else if (r.CellsOnRouteAToB[i].HasMonster) {
+                        Debug.WriteLine($"Monster cell at {i}, but we can't see it! It's a {r.CellsOnRouteAToB[i].MonsterInCell.GetType().Name}.");
+                    }
+                    else {
+                        Debug.WriteLine($"Better be a mirror at {i}!");
+                    }
+                }
+
+                Debug.WriteLine("");
+                Debug.WriteLine("Point B");
+                List<Cell> reversedRoute = r.CellsOnRouteAToB.ToList();
+                reversedRoute.Reverse();
+                int pointBSeens = 0;
+                for (int i = 0; i < reversedRoute.Count; i++) {
+                    if (reversedRoute[i].HasMonster && reversedRoute[i].MonsterInCell.IsSeen(r.PointB, r)) {
+                        pointBSeens++;
+                        Debug.WriteLine($"Monster seen at {i} cell! It's a {reversedRoute[i].MonsterInCell.GetType().Name}. Total seen from B: {pointBSeens}");
+                    }
+                    else if (reversedRoute[i].HasMonster) {
+                        Debug.WriteLine($"Monster cell at {i}, but we can't see it! It's a {reversedRoute[i].MonsterInCell.GetType().Name}.");
+                    }
+                    else {
+                        Debug.WriteLine($"Better be a mirror at {i}!");
+                    }
+                }
+
+                string pointAText = pointASeens.ToString();
+                string pointBText = pointBSeens.ToString();
+
+                r.PointA.Draw(sb, font, pointAText, this, CellSize);
+                r.PointB.Draw(sb, font, pointBText, this, CellSize);
+
+                Debug.WriteLine("");
             }
         }
 

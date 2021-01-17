@@ -23,6 +23,6 @@ namespace Undead_040220.Structures
         /// </summary>
         /// <param name="originIndicator"></param>
         /// <returns></returns>
-        internal abstract bool IsSeen(Indicator originIndicator);
+        internal abstract bool IsSeen(Indicator originIndicator, Route route);
     }
 }

@@ -17,8 +17,26 @@ namespace Undead_040220.Structures.Monsters
             Coordinate = coordinate;
         }
 
-        internal override bool IsSeen(Indicator originIndicator) {
-            throw new NotImplementedException();
+        internal override bool IsSeen(Indicator originIndicator, Route route) {
+            List<Cell> cellsOnRoute = route.CellsOnRouteAToB.ToList();
+
+            if (route.PointB.Position == originIndicator.Position) {    // the route should be interpreted "backwards"
+                cellsOnRoute.Reverse();
+            }
+
+            int thisIndex = cellsOnRoute.FindIndex(e => e.Coordinate == Coordinate);
+            int firstMirrorIndex = cellsOnRoute.FindIndex(e => e.HasMirror);
+
+            // no mirror on route
+            if (firstMirrorIndex == -1) return true;
+
+            // mirror found
+            if (firstMirrorIndex > thisIndex) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     }
 }

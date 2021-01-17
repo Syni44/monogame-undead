@@ -60,17 +60,17 @@ namespace Undead_040220.Structures
         /// Draws Indicator default text based on its position relative to the rows and columns of the board. Drawing once
         /// is necessary to set the proper position of the Indicator.
         /// </summary>
-        internal void Draw(SpriteBatch sb, SpriteFont font, Board gameBoard, int cellSize) {
-            sb.DrawString(font, "hi", Position, Color.White);
+        internal void Draw(SpriteBatch sb, SpriteFont font, string text, Board gameBoard, int cellSize) {
+            sb.DrawString(font, text, Position, Color.White);
         }
 
         internal void DrawIndicatorText(SpriteBatch sb, SpriteFont font, List<Cell> cells) {
             // TODO: draw indicator position logic
 
-            Vector2 pos = new Vector2();
-            pos = cells.Where(e => e.Coordinate.X == 0 && e.Coordinate.Y == Index).Select(e => e.Position).FirstOrDefault() - Vector2.One;
+            //Vector2 pos = new Vector2();
+            //pos = cells.Where(e => e.Coordinate.X == 0 && e.Coordinate.Y == Index).Select(e => e.Position).FirstOrDefault() - Vector2.One;
 
-            sb.DrawString(font, "yo", pos, Color.White);
+            //sb.DrawString(font, "yo", pos, Color.White);
         }
     }
 }
