@@ -18,7 +18,7 @@ namespace Undead_040220.Structures.Monsters
         }
 
         internal override bool IsSeen(Indicator originIndicator, Route route) {
-            List<Cell> cellsOnRoute = route.CellsOnRouteAToB.ToList();
+            List<Cell> cellsOnRoute = route.CellsOnRouteAToB.ToList();  // why is adding .ToList() necessary? without it the counts are wrong!
 
             if (route.PointB.Position == originIndicator.Position) {    // the route should be interpreted "backwards"
                 cellsOnRoute.Reverse();

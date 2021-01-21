@@ -67,26 +67,22 @@ namespace Undead_040220.Structures
         /// Determines the locations to spawn mirrors.
         /// </summary>
         public void CreateMirrors() {
-            do {
-                Mirrors.Clear();
+            // set mirror count
+            double mirrorCount = Convert.ToDouble(_rng.Next((Width * Height / 4), (int)(Width * Height / 1.8) + 1));
+            Debug.WriteLine($"MIRROR COUNT: {mirrorCount}");
 
-                for (int i = 0; i < Cells.Count; i++) {
-                    int direction = _rng.Next(2);
+            // iterate through cells, setting the probability as (amount needed) / (amount left) and measure
+            // whether rng.NextDouble is less than or equal to probability
+            for (int i = 0; i < Cells.Count; i++) {
+                int direction = _rng.Next(2);
+                double probability = mirrorCount / (Cells.Count - i);
 
-                    // mirror frequency rate. _rng.Next(3) would mean 33.3% chance
-                    // new cases should be added to reflect chances
-                    switch (_rng.Next(3)) {
-                        case 0: break;
-                        case 1: break;
-                        default:
-                            // todo: the mirror adding stuff here occasionally breaks
-                            // cells can sometimes be marked as HasMirror despite no mirror having the same coordinates
-                            Cells[i].HasMirror = true;
-                            Mirrors.Add(new Mirror((Mirror.Direction)direction, new Vector2(i % Width, i / Width)));
-                            break;
-                    }
+                if (_rng.NextDouble() <= probability) {
+                    Cells[i].HasMirror = true;
+                    Mirrors.Add(new Mirror((Mirror.Direction)direction, new Vector2(i % Width, i / Width)));
+                    mirrorCount--;
                 }
-            } while (Mirrors.Count <= (Width * Height / 4) || Mirrors.Count > (Width * Height / 1.8));
+            }
         }
 
         /// <summary>
