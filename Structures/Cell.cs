@@ -22,8 +22,9 @@ namespace Undead_040220.Structures
             BorderThickness = borderThickness;
         }
 
-        internal void SetPosition(Vector2 boardOriginPoint) {
-            Position = boardOriginPoint + Coordinate + (Coordinate * CellSize);
+        internal void SetPosition(Vector2 boardOriginPoint, int legendHeight, int spacing) {
+            Vector2 tempPosition = boardOriginPoint + Coordinate + (Coordinate * CellSize);
+            Position = tempPosition += new Vector2(0, (legendHeight / 2) + (spacing / 2));
         }
 
         // Draws a Cell to a position depending on it's coordinate within the game board.

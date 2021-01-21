@@ -35,11 +35,11 @@ namespace Undead_040220.Structures
         /// <summary>
         /// Fills the gameboard with empty Cells.
         /// </summary>
-        public void CreateCells(int cellSize, int borderThickness) {
+        public void CreateCells(int cellSize, int borderThickness, int legendHeight, int spacing) {
             for (int j = 0; j < Height; j++) {
                 for (int i = 0; i < Width; i++) {
                     Cell c = new Cell(i, j, cellSize, borderThickness);
-                    c.SetPosition(_origin);
+                    c.SetPosition(_origin, legendHeight, spacing);
                     Cells.Add(c);
                 }
             }

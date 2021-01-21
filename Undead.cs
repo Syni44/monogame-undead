@@ -20,6 +20,7 @@ namespace Undead_040220
         // game window resolution
         int resWidth = 1600;
         int resHeight = 900;
+        Point screenCenter;
 
         Texture2D white_s;
         Texture2D zombie_s;
@@ -35,9 +36,14 @@ namespace Undead_040220
 
         // game board fields
         Board gameBoard;
-        int boardWidth = 5;
+        int boardWidth = 6;
         int boardHeight = 5;
         int cellBorderThickness = 2;
+
+        // legend fields
+        Legend gameLegend;
+        int legendHeight = 100;
+        int vSpacing = 60;
 
         bool initGameDrawn = false;
         System.Random rng = new System.Random();
@@ -63,12 +69,22 @@ namespace Undead_040220
         /// </summary>
         protected override void Initialize() {
             // spawn a new game board here and populate with cells and indicators
+            if (boardWidth > 10) boardWidth = 10;
+            if (boardHeight > 6) boardHeight = 6;
+
+            if (boardWidth < 3) boardWidth = 3;
+            if (boardHeight < 3) boardHeight = 3;
+
             gameBoard = new Board(boardWidth, boardHeight, cellSize);
 
             // define center point when drawing game board to the screen
-            gameBoard.SetOrigin(new Point(resWidth / 2, resHeight / 2));
+            screenCenter = new Point(resWidth / 2, resHeight / 2);
+            gameBoard.SetOrigin(screenCenter);
 
-            gameBoard.CreateCells(cellSize, cellBorderThickness);
+            // spawn legend
+            gameLegend = new Legend(legendHeight, cellSize, 16);
+
+            gameBoard.CreateCells(cellSize, cellBorderThickness, legendHeight, vSpacing);
             gameBoard.CreateIndicators();
             gameBoard.CreateMirrors();
             gameBoard.SpawnMonsters();
@@ -114,6 +130,10 @@ namespace Undead_040220
 
             // TODO: Add your update logic here
 
+            // TODO: when updating legend stocks...
+            // re-calculate the rectangle/point where DrawString should write the numbers!
+            // if the number is 2 digits+, it becomes off-centered. Need a centering algorithm for that
+
             base.Update(gameTime);
         }
 
@@ -136,29 +156,25 @@ namespace Undead_040220
                 GraphicsDevice.Clear(Color.Black);
 
                 gameBoard.Draw(spriteBatch, white_s, indicator_font, scale);
-
-                //// TODO: right now this just draws random sprites to every tile upon launch
-                //var spriteList = new List<Texture2D>() { zombie_s, vampire_s, ghost_s, mirrorL_s, mirrorR_s };
-
-                //for (int i = 0; i < gameBoard.Cells.Count; i++) {
-                //    Cell c = gameBoard.CellAtCoordinate(i % gameBoard.Width, i / gameBoard.Width);
-                //    c.DrawCellSprite(spriteBatch, spriteList[rng.Next(spriteList.Count())]);
-                //}
-
-
-                for (int i = 0; i < gameBoard.Indicators.Count; i++) {
-                    //// TODO: get indicator via some method. "coordinate" possibly not ideal due to indicators only
-                    //// appearing twice per row/column at specific places
-
-                    //Indicator n = gameBoard.IndicatorAt((Indicator.Side)Math.Ceiling((double)i / 4), i % gameBoard.Width);
-                    //n.DrawIndicatorText(spriteBatch, indicator_font, gameBoard.Cells);
-
-                }
+                gameLegend.Draw(spriteBatch, zombie_s, vampire_s, ghost_s,
+                    new Rectangle(screenCenter.X - (gameLegend.Width / 2),
+                        screenCenter.Y - ((gameBoard.Height * cellSize) / 2) - ((gameLegend.Height / 2) + vSpacing),
+                        gameLegend.Width,
+                        gameLegend.Height)
+                    );
 
                 gameBoard.DrawMirrors(spriteBatch, mirrorL_s, mirrorR_s);
 
                 // vvv this is DEBUG -- we shouldn't show the monster sprites, that's the point of the game!
                 gameBoard.DrawMonsters(spriteBatch, zombie_s, vampire_s, ghost_s);
+
+                gameLegend.DrawStocks(
+                    spriteBatch,
+                    indicator_font,
+                    gameBoard.Monsters.Count(e => e.GetType().Name == "Zombie").ToString(),
+                    gameBoard.Monsters.Count(e => e.GetType().Name == "Vampire").ToString(),
+                    gameBoard.Monsters.Count(e => e.GetType().Name == "Ghost").ToString()
+                );
 
                 initGameDrawn = true;
             }
