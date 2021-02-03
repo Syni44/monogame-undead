@@ -45,12 +45,16 @@
     <Compile Include="Structures\Cell.cs" />
     <Compile Include="Structures\Indicator.cs" />
     <Compile Include="Structures\Legend.cs" />
+    <Compile Include="Structures\Legends\VampireLegend.cs" />
+    <Compile Include="Structures\Legends\GhostLegend.cs" />
+    <Compile Include="Structures\Legends\ZombieLegend.cs" />
     <Compile Include="Structures\Mirror.cs" />
     <Compile Include="Structures\Monster.cs" />
     <Compile Include="Structures\Monsters\Ghost.cs" />
     <Compile Include="Structures\Monsters\Vampire.cs" />
     <Compile Include="Structures\Monsters\Zombie.cs" />
     <Compile Include="Structures\Route.cs" />
+    <Compile Include="Engine\IDraggable.cs" />
     <Compile Include="Undead.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

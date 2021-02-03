@@ -34,6 +34,9 @@ namespace Undead_040220
         int cellSize = 96;
         Vector2 scale = new Vector2(4, 4);
 
+        MouseState mouse;
+        KeyboardState keyboard;
+
         // game board fields
         Board gameBoard;
         int boardWidth = 6;
@@ -46,7 +49,7 @@ namespace Undead_040220
         int vSpacing = 60;
 
         bool initGameDrawn = false;
-        System.Random rng = new System.Random();
+        Random rng = new Random();
 
         public Undead() {
             graphics = new GraphicsDeviceManager(this);
@@ -128,7 +131,11 @@ namespace Undead_040220
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            mouse = Mouse.GetState();
+            keyboard = Keyboard.GetState();
+
+            gameBoard.Update(mouse, keyboard);
+            gameLegend.Update(mouse, keyboard);
 
             // TODO: when updating legend stocks...
             // re-calculate the rectangle/point where DrawString should write the numbers!

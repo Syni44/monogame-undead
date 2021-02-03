@@ -33,6 +33,15 @@ namespace Undead_040220.Structures
         }
 
         /// <summary>
+        /// Checked every in-game tick for mouse and keyboard activity in the game board.
+        /// </summary>
+        /// <param name="mouse"></param>
+        /// <param name="keyboard"></param>
+        public void Update(MouseState mouse, KeyboardState keyboard) {
+
+        }
+
+        /// <summary>
         /// Fills the gameboard with empty Cells.
         /// </summary>
         public void CreateCells(int cellSize, int borderThickness, int legendHeight, int spacing) {

@@ -1,10 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Undead_040220.Structures.Legends;
 
 namespace Undead_040220.Structures
 {
@@ -17,9 +21,13 @@ namespace Undead_040220.Structures
         public int GhostStock { get; private set; }
         public int StockSize { get; private set; }
         public int StockSpacing { get; private set; }
-        private Point _zombiePos;
-        private Point _vampirePos;
-        private Point _ghostPos;
+        private Rectangle _zombieRect;
+        private Rectangle _vampireRect;
+        private Rectangle _ghostRect;
+
+        public ZombieLegend ZLegend { get; private set; }
+        public VampireLegend VLegend { get; private set; }
+        public GhostLegend GLegend { get; private set; }
 
         public Legend(int height, int cellSize, int cellSpacing) {
             Height = height;
@@ -28,29 +36,41 @@ namespace Undead_040220.Structures
             StockSize = cellSize;
         }
 
+        /// <summary>
+        /// Checked every in-game tick for mouse and keyboard activity in the legend.
+        /// </summary>
+        /// <param name="mouse"></param>
+        /// <param name="keyboard"></param>
+        public void Update(MouseState mouse, KeyboardState keyboard) {
+        }
+
         public void Draw(SpriteBatch sb, Texture2D z_t, Texture2D v_t, Texture2D g_t, Rectangle r) {
-            _zombiePos = new Point(r.X, r.Y);
-            _vampirePos = new Point(r.X + StockSize + StockSpacing, r.Y);
-            _ghostPos = new Point(r.X + (StockSize * 2) + (StockSpacing * 2), r.Y);
+            Point _zombiePos = new Point(r.X, r.Y);
+            Point _vampirePos = new Point(r.X + StockSize + StockSpacing, r.Y);
+            Point _ghostPos = new Point(r.X + (StockSize * 2) + (StockSpacing * 2), r.Y);
+
+            _zombieRect = new Rectangle(_zombiePos, new Point(StockSize, StockSize));
+            _vampireRect = new Rectangle(_vampirePos, new Point(StockSize, StockSize));
+            _ghostRect = new Rectangle(_ghostPos, new Point(StockSize, StockSize));
 
             // zombie
             sb.Draw( // Texture2D, Rectangle, Color
                     z_t,
-                    new Rectangle(_zombiePos, new Point(StockSize, StockSize)),
+                    _zombieRect,
                     Color.White
                 );
 
             // vampire
             sb.Draw( // Texture2D, Rectangle, Color
                     v_t,
-                    new Rectangle(_vampirePos, new Point(StockSize, StockSize)),
+                    _vampireRect,
                     Color.White
                 );
 
             // ghost
             sb.Draw( // Texture2D, Rectangle, Color
                     g_t,
-                    new Rectangle(_ghostPos, new Point(StockSize, StockSize)),
+                    _ghostRect,
                     Color.White
                 );
         }
@@ -65,13 +85,13 @@ namespace Undead_040220.Structures
             int nudgeAmount = StockSize / 2;
 
             // zombie
-            sb.DrawString(font, z_count, new Vector2(_zombiePos.X + (StockSize / 2.5f), _zombiePos.Y - nudgeAmount), Color.Aquamarine);
+            sb.DrawString(font, z_count, new Vector2(_zombieRect.X + (StockSize / 2.5f), _zombieRect.Y - nudgeAmount), Color.Aquamarine);
 
             // vampire
-            sb.DrawString(font, v_count, new Vector2(_vampirePos.X + (StockSize / 2.5f), _vampirePos.Y - nudgeAmount), Color.Aquamarine);
+            sb.DrawString(font, v_count, new Vector2(_vampireRect.X + (StockSize / 2.5f), _vampireRect.Y - nudgeAmount), Color.Aquamarine);
 
             // ghost
-            sb.DrawString(font, g_count, new Vector2(_ghostPos.X + (StockSize / 2.5f), _ghostPos.Y - nudgeAmount), Color.Aquamarine);
+            sb.DrawString(font, g_count, new Vector2(_ghostRect.X + (StockSize / 2.5f), _ghostRect.Y - nudgeAmount), Color.Aquamarine);
         }
     }
 }

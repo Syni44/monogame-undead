@@ -63,14 +63,5 @@ namespace Undead_040220.Structures
         internal void Draw(SpriteBatch sb, SpriteFont font, string text, Board gameBoard, int cellSize) {
             sb.DrawString(font, text, Position, Color.White);
         }
-
-        internal void DrawIndicatorText(SpriteBatch sb, SpriteFont font, List<Cell> cells) {
-            // TODO: draw indicator position logic
-
-            //Vector2 pos = new Vector2();
-            //pos = cells.Where(e => e.Coordinate.X == 0 && e.Coordinate.Y == Index).Select(e => e.Position).FirstOrDefault() - Vector2.One;
-
-            //sb.DrawString(font, "yo", pos, Color.White);
-        }
     }
 }

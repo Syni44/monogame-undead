@@ -10,6 +10,7 @@ namespace Undead_040220.Structures
         public Vector2 Coordinate { get; private set; }
         // pixel position within game window, ie {440, 80}
         public Vector2 Position { get; private set; }
+        public Rectangle Rect { get; private set; }
         public int CellSize { get; private set; }
         public int BorderThickness { get; private set; }
         public bool HasMirror { get; set; } = false;
@@ -42,9 +43,11 @@ namespace Undead_040220.Structures
         }
 
         public void DrawCellSprite(SpriteBatch sb, Texture2D t) {
+            Rect = new Rectangle(Position.ToPoint(), new Point(CellSize - (BorderThickness * 4), CellSize - (BorderThickness * 4)));
+
             sb.Draw( // Texture2D, Rectangle, Color
                 t, 
-                new Rectangle(Position.ToPoint(), new Point(CellSize - (BorderThickness * 4), CellSize - (BorderThickness * 4))), 
+                Rect, 
                 Color.White
             );
         }
