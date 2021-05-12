@@ -173,7 +173,7 @@ namespace Undead_040220
                 gameBoard.DrawMirrors(spriteBatch, mirrorL_s, mirrorR_s);
 
                 // vvv this is DEBUG -- we shouldn't show the monster sprites, that's the point of the game!
-                gameBoard.DrawMonsters(spriteBatch, zombie_s, vampire_s, ghost_s);
+                // gameBoard.DrawMonsters(spriteBatch, zombie_s, vampire_s, ghost_s);
 
                 gameLegend.DrawStocks(
                     spriteBatch,

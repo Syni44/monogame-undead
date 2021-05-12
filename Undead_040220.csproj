@@ -45,9 +45,7 @@
     <Compile Include="Structures\Cell.cs" />
     <Compile Include="Structures\Indicator.cs" />
     <Compile Include="Structures\Legend.cs" />
-    <Compile Include="Structures\Legends\VampireLegend.cs" />
-    <Compile Include="Structures\Legends\GhostLegend.cs" />
-    <Compile Include="Structures\Legends\ZombieLegend.cs" />
+    <Compile Include="Structures\LegendMonster.cs" />
     <Compile Include="Structures\Mirror.cs" />
     <Compile Include="Structures\Monster.cs" />
     <Compile Include="Structures\Monsters\Ghost.cs" />

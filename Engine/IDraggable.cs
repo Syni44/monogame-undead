@@ -9,5 +9,6 @@ namespace Undead_040220.System
     public interface IDraggable
     {
         bool Dragging { get; set; }
+        bool Hovering { get; set; }
     }
 }
